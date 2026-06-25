@@ -23,7 +23,7 @@ async function fetchLocalDatabase() {
     loadingIndicator.style.display = 'block';
 
     try {
-        const response = await fetch('database.json');
+        const response = await fetch('./database.json');
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
