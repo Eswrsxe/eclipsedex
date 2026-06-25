@@ -32,8 +32,12 @@ async function fetchLocalDatabase() {
         pokemonDatabase = await response.json();
         applyFilters(); // Inicia a renderização
     } catch (error) {
-        console.error("Erro ao carregar o database.json:", error);
-        document.getElementById('pokemonGrid').innerHTML = '<div class="no-results" style="color: #f44336;">Erro ao carregar os dados. Certifique-se de estar rodando em um servidor local (Live Server).</div>';
+        console.error("Erro detalhado:", error);
+        document.getElementById('pokemonGrid').innerHTML = `<div class="no-results" style="color: #f44336; padding: 2rem;">
+            <strong>Ocorreu um erro ao carregar os dados:</strong><br><br>
+            ${error.message}<br><br>
+            <small>Dica: Acesse a URL do seu site e coloque /database.json no final para ver se o arquivo existe.</small>
+        </div>`;
     } finally {
         loadingIndicator.style.display = 'none';
     }
