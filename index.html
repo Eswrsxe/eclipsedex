@@ -52,7 +52,32 @@
         
         .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
         .loading-state { text-align: center; padding: 4rem 2rem; color: var(--primary); font-family: 'Orbitron', sans-serif; }
-        .loading-spinner { width: 50px; height: 50px; border: 4px solid rgba(157, 78, 221, 0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
+        /* Barra de Carregamento Eclipse */
+        .loading-track {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            height: 6px;
+            margin: 3rem auto 2rem auto;
+            background: linear-gradient(to right, #FF8C00, #9D4EDD); /* Laranja para Roxo */
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(157, 78, 221, 0.4);
+        }
+        
+        .legendary-container {
+            position: absolute;
+            top: -45px; /* Posiciona o Pokémon correndo/voando exatamente EM CIMA da linha */
+            left: 0%;
+            transform: translateX(-50%); /* Centraliza a imagem no ponto exato da porcentagem */
+            transition: left 0.4s ease-out; /* Movimento suave conforme carrega */
+            will-change: left;
+        }
+        
+        #legendaryIcon {
+            height: 55px; /* Tamanho fixo para a transição não dar pulos */
+            object-fit: contain;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5));
+        }
         @keyframes spin { to { transform: rotate(360deg); } }
         
         .pokemon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
