@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=devicke-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EclipseDex - Poke Eclipse</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
     <style>
@@ -52,6 +52,7 @@
         
         .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
         .loading-state { text-align: center; padding: 4rem 2rem; color: var(--primary); font-family: 'Orbitron', sans-serif; }
+        
         /* Barra de Carregamento Eclipse */
         .loading-track {
             position: relative;
@@ -59,22 +60,22 @@
             max-width: 400px;
             height: 6px;
             margin: 3rem auto 2rem auto;
-            background: linear-gradient(to right, #FF8C00, #9D4EDD); /* Laranja para Roxo */
+            background: linear-gradient(to right, #FF8C00, #9D4EDD);
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(157, 78, 221, 0.4);
         }
         
         .legendary-container {
             position: absolute;
-            top: -45px; /* Posiciona o Pokémon correndo/voando exatamente EM CIMA da linha */
+            top: -45px;
             left: 0%;
-            transform: translateX(-50%); /* Centraliza a imagem no ponto exato da porcentagem */
-            transition: left 0.4s ease-out; /* Movimento suave conforme carrega */
+            transform: translateX(-50%);
+            transition: left 0.4s ease-out;
             will-change: left;
         }
         
         #legendaryIcon {
-            height: 55px; /* Tamanho fixo para a transição não dar pulos */
+            height: 55px;
             object-fit: contain;
             filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5));
         }
@@ -191,16 +192,20 @@
         Total: <span id="totalCount">0</span> Pokémon • Mostrando: <span id="showingCount">0</span>
     </div>
 
-        <div class="loading-state" id="loadingState">
-            <div class="loading-track">
-                <div class="legendary-container" id="legendaryMover">
-                    <img src="https://play.pokemonshowdown.com/sprites/ani/solgaleo.gif" id="legendaryIcon" alt="Loading...">
-                </div>
-            </div>
-            <div id="loadingText" style="font-family: 'Orbitron', sans-serif; color: var(--primary-light); font-size: 1.1rem; letter-spacing: 2px;">
-                Carregando Animações... 0%
+    <div class="loading-state" id="loadingState">
+        <div class="loading-track">
+            <div class="legendary-container" id="legendaryMover">
+                <img src="https://play.pokemonshowdown.com/sprites/ani/solgaleo.gif" id="legendaryIcon" alt="Loading...">
             </div>
         </div>
+        <div id="loadingText" style="font-family: 'Orbitron', sans-serif; color: var(--primary-light); font-size: 1.1rem; letter-spacing: 2px;">
+            Carregando Animações... 0%
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="pokemonGrid" class="pokemon-grid" style="display:none;"></div>
+    </div>
 
     <footer class="footer">
         <div class="footer-brand">🌑 POKE ECLIPSE 🌑</div>
@@ -220,7 +225,6 @@
     <script>
         const typeColors = { normal:'#A8A878', fire:'#F08030', water:'#6890F0', electric:'#F8D030', grass:'#78C850', ice:'#98D8D8', fighting:'#C03028', poison:'#A040A0', ground:'#E0C068', flying:'#A890F0', psychic:'#F85888', bug:'#A8B820', rock:'#B8A038', ghost:'#705898', dragon:'#7038F8', dark:'#705848', steel:'#B8B8D0', fairy:'#EE99AC' };
         
-        // 🔮 Dicionário de Emojis de Tipos (As suas pílulas!)
         const typeEmojisWeb = {
             normal: 'https://cdn.discordapp.com/emojis/1518017238857158696.png',
             fighting: 'https://cdn.discordapp.com/emojis/1518018527389552680.png',
@@ -250,21 +254,22 @@
         };
 
         let currentFilter = 'all', searchTerm = '', pokemonCache = {};
-        const urlParams = new URLSearchParams(window.location.search);
-        const initialSearch = (urlParams.get('search') || urlParams.get('q') || '').trim().toLowerCase();
 
         document.addEventListener('DOMContentLoaded', () => {
+            applyInitialSearchFromUrl();
             setupEventListeners();
-            applyInitialSearch();
             loadPokemonData();
         });
 
-        function applyInitialSearch() {
-            if (!initialSearch) return;
-            const input = document.getElementById('searchInput');
-            if (!input) return;
-            input.value = initialSearch;
-            searchTerm = initialSearch;
+        function applyInitialSearchFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            const initialSearch = (params.get('search') || params.get('q') || '').trim();
+
+            if (initialSearch) {
+                const input = document.getElementById('searchInput');
+                if (input) input.value = initialSearch;
+                searchTerm = initialSearch.toLowerCase();
+            }
         }
 
         function setupEventListeners() {
@@ -279,7 +284,63 @@
             });
         }
 
-loadPokemonData()
+        async function loadPokemonData() {
+            const loadingState = document.getElementById('loadingState');
+            const grid = document.getElementById('pokemonGrid');
+
+            try {
+                const batchSize = 50;
+                const total = pokemonDatabase.length;
+
+                for (let i = 0; i < total; i += batchSize) {
+                    const batch = pokemonDatabase.slice(i, i + batchSize);
+
+                    await Promise.all(batch.map(async (pokemon) => {
+                        if (pokemonCache[pokemon.id]) return;
+                        
+                        const nomeGif = pokemon.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+                        const spriteAnimado = `https://play.pokemonshowdown.com/sprites/ani/${nomeGif}.gif`;
+
+                        try {
+                            const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.id}`);
+                            if (!res.ok) throw new Error('API error');
+                            const data = await res.json();
+                            
+                            pokemonCache[pokemon.id] = {
+                                ...pokemon,
+                                sprite: spriteAnimado,
+                                type: data.types[0].type.name,
+                                typeName: data.types[0].type.name.charAt(0).toUpperCase() + data.types[0].type.name.slice(1)
+                            };
+                        } catch (err) {
+                            pokemonCache[pokemon.id] = { ...pokemon, sprite: spriteAnimado, type: 'normal', typeName: 'Desconhecido' };
+                        }
+                    }));
+                    
+                    const progress = Math.min(((i + batchSize) / total) * 100, 100);
+                    const progressMath = Math.round(progress);
+
+                    const textoLoading = document.getElementById('loadingText');
+                    if (textoLoading) textoLoading.textContent = `Carregando Animações... ${progressMath}%`;
+
+                    const mover = document.getElementById('legendaryMover');
+                    if (mover) mover.style.left = `${progress}%`;
+
+                    const icon = document.getElementById('legendaryIcon');
+                    if (progressMath >= 50 && icon && !icon.src.includes('lunala')) {
+                        icon.src = 'https://play.pokemonshowdown.com/sprites/ani/lunala.gif';
+                    }
+                }
+                
+                loadingState.style.display = 'none';
+                grid.style.display = 'grid';
+                document.getElementById('totalCount').textContent = pokemonDatabase.length;
+                renderPokemon();
+                
+            } catch (error) {
+                loadingState.innerHTML = '<div style="color: #f44336; font-family: Orbitron; font-size: 1.2rem;">Erro ao carregar os dados. Recarregue a página!</div>';
+            }
+        }
 
         function renderPokemon() {
             const grid = document.getElementById('pokemonGrid');
@@ -301,7 +362,6 @@ loadPokemonData()
                 card.className = 'pokemon-card';
                 const typeColor = typeColors[pokemon.type] || typeColors.normal;
                 
-                // Vai procurar a imagem do tipo, se não encontrar (ou falhar a API), usa a etiqueta antiga de texto
                 const imgTipo = typeEmojisWeb[pokemon.type];
                 const badgeHtml = imgTipo 
                     ? `<img src="${imgTipo}" alt="${pokemon.typeName}" class="type-emoji-badge">`
