@@ -192,11 +192,15 @@
 
     <div class="container">
         <div class="loading-state" id="loadingState">
-            <div class="loading-spinner"></div>
-            <div>Carregando Pokédex...</div>
+            <div class="loading-track">
+                <div class="legendary-container" id="legendaryMover">
+                    <img src="https://play.pokemonshowdown.com/sprites/ani/solgaleo.gif" id="legendaryIcon" alt="Loading...">
+                </div>
+            </div>
+            <div id="loadingText" style="font-family: 'Orbitron', sans-serif; color: var(--primary-light); font-size: 1.1rem; letter-spacing: 2px;">
+                Carregando Animações... 0%
+            </div>
         </div>
-        <div class="pokemon-grid" id="pokemonGrid" style="display: none;"></div>
-    </div>
 
     <footer class="footer">
         <div class="footer-brand">🌑 POKE ECLIPSE 🌑</div>
@@ -264,45 +268,7 @@
             });
         }
 
-        async function loadPokemonData() {
-            const loadingState = document.getElementById('loadingState');
-            const grid = document.getElementById('pokemonGrid');
-            try {
-                const batchSize = 50;
-                for (let i = 0; i < pokemonDatabase.length; i += batchSize) {
-                    const batch = pokemonDatabase.slice(i, i + batchSize);
-                    await Promise.all(batch.map(async (pokemon) => {
-                        if (pokemonCache[pokemon.id]) return;
-                        
-                        const nomeGif = pokemon.name.toLowerCase().replace(/[^a-z0-9]/g, '');
-                        const spriteAnimado = `https://play.pokemonshowdown.com/sprites/ani/${nomeGif}.gif`;
-
-                        try {
-                            const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.id}`);
-                            if (!res.ok) throw new Error('API error');
-                            const data = await res.json();
-                            
-                            pokemonCache[pokemon.id] = {
-                                ...pokemon,
-                                sprite: spriteAnimado,
-                                type: data.types[0].type.name,
-                                typeName: data.types[0].type.name.charAt(0).toUpperCase() + data.types[0].type.name.slice(1)
-                            };
-                        } catch (err) {
-                            pokemonCache[pokemon.id] = { ...pokemon, sprite: spriteAnimado, type: 'normal', typeName: 'Desconhecido' };
-                        }
-                    }));
-                    const progress = Math.min(((i + batchSize) / pokemonDatabase.length) * 100, 100);
-                    loadingState.querySelector('div:last-child').textContent = `Carregando Animações... ${Math.round(progress)}%`;
-                }
-                loadingState.style.display = 'none';
-                grid.style.display = 'grid';
-                document.getElementById('totalCount').textContent = pokemonDatabase.length;
-                renderPokemon();
-            } catch (error) {
-                loadingState.innerHTML = '<div style="color: #f44336">Erro ao carregar dados. Recarregue a página.</div>';
-            }
-        }
+loadPokemonData()
 
         function renderPokemon() {
             const grid = document.getElementById('pokemonGrid');
