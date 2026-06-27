@@ -69,17 +69,17 @@
         .pokemon-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .pokemon-id { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; color: var(--primary-light); font-weight: 700; opacity: 0.8; }
         .pokemon-name { 
-            font-family: 'Pokemon Solid', 'Inter', sans-serif; 
+            font-family: 'PokemonSolid', 'Inter', sans-serif; 
             font-size: 1.8rem; 
             color: var(--white); 
             text-transform: capitalize; 
             letter-spacing: 2px; 
             
-            /* 👇 A mágica da borda acontece aqui! */
-            -webkit-text-stroke: 1px #000000; 
+            /* Borda ultra fina e discreta (0.6 pixels) */
+            -webkit-text-stroke: 0.6px #000000; 
             
-            /* (Opcional) Uma sombrinha leve pra dar um efeito 3D e soltar a letra do fundo */
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6); 
+            /* Sombra mais leve para não borrar a leitura */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); 
         }
         
         .type-badge { display: inline-block; padding: 0.3rem 0.9rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1rem; color: white; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
