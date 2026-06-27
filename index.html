@@ -173,11 +173,32 @@
     <script>
         const typeColors = { normal:'#A8A878', fire:'#F08030', water:'#6890F0', electric:'#F8D030', grass:'#78C850', ice:'#98D8D8', fighting:'#C03028', poison:'#A040A0', ground:'#E0C068', flying:'#A890F0', psychic:'#F85888', bug:'#A8B820', rock:'#B8A038', ghost:'#705898', dragon:'#7038F8', dark:'#705848', steel:'#B8B8D0', fairy:'#EE99AC' };
         
-        // Emojis customizados transformados em links do Discord!
+        // 🔮 Dicionário de Emojis de Tipos (As suas pílulas!)
+        const typeEmojisWeb = {
+            normal: 'https://cdn.discordapp.com/emojis/1518017238857158696.png',
+            fighting: 'https://cdn.discordapp.com/emojis/1518018527389552680.png',
+            flying: 'https://cdn.discordapp.com/emojis/1518018528530137268.png',
+            poison: 'https://cdn.discordapp.com/emojis/1518018530019119164.png',
+            ground: 'https://cdn.discordapp.com/emojis/1518018531604828291.png',
+            rock: 'https://cdn.discordapp.com/emojis/1518018535715115192.png',
+            bug: 'https://cdn.discordapp.com/emojis/1518018537040384071.png',
+            ghost: 'https://cdn.discordapp.com/emojis/1518018538298802318.png',
+            steel: 'https://cdn.discordapp.com/emojis/1518018539997499453.png',
+            fire: 'https://cdn.discordapp.com/emojis/1518018541415305307.png',
+            water: 'https://cdn.discordapp.com/emojis/1518018543453605918.png',
+            grass: 'https://cdn.discordapp.com/emojis/1518018544732864582.png',
+            electric: 'https://cdn.discordapp.com/emojis/1518018545944887326.png',
+            psychic: 'https://cdn.discordapp.com/emojis/1518018547526144162.png',
+            ice: 'https://cdn.discordapp.com/emojis/1518018549396934807.png',
+            dragon: 'https://cdn.discordapp.com/emojis/1518018550818799646.png',
+            dark: 'https://cdn.discordapp.com/emojis/1518018552165306368.png',
+            fairy: 'https://cdn.discordapp.com/emojis/1518018554257997845.png'
+        };
+
         const icones = {
             bioma: '<img src="https://cdn.discordapp.com/emojis/1518021808983642232.png" style="width: 20px; vertical-align: middle;">',
             bloco: '<img src="https://cdn.discordapp.com/emojis/1518021807406321756.png" style="width: 20px; vertical-align: middle;">',
-            condicao: '<img src="https://cdn.discordapp.com/emojis/1518021805854691428.gif" style="width: 20px; vertical-align: middle;">', // Relógio Animado!
+            condicao: '<img src="https://cdn.discordapp.com/emojis/1518021805854691428.gif" style="width: 20px; vertical-align: middle;">',
             raridade: '<img src="https://cdn.discordapp.com/emojis/1518021814322725117.png" style="width: 20px; vertical-align: middle;">'
         };
 
@@ -210,7 +231,6 @@
                     await Promise.all(batch.map(async (pokemon) => {
                         if (pokemonCache[pokemon.id]) return;
                         
-                        // 1. Gera o nome do GIF animado (igualzinho ao bot)
                         const nomeGif = pokemon.name.toLowerCase().replace(/[^a-z0-9]/g, '');
                         const spriteAnimado = `https://play.pokemonshowdown.com/sprites/ani/${nomeGif}.gif`;
 
@@ -221,7 +241,7 @@
                             
                             pokemonCache[pokemon.id] = {
                                 ...pokemon,
-                                sprite: spriteAnimado, // Usando o GIF Animado aqui!
+                                sprite: spriteAnimado,
                                 type: data.types[0].type.name,
                                 typeName: data.types[0].type.name.charAt(0).toUpperCase() + data.types[0].type.name.slice(1)
                             };
@@ -261,7 +281,12 @@
                 card.className = 'pokemon-card';
                 const typeColor = typeColors[pokemon.type] || typeColors.normal;
                 
-                // 2. Trocando os emojis antigos de texto pelos seus emojis oficias do Discord!
+                // Vai procurar a imagem do tipo, se não encontrar (ou falhar a API), usa a etiqueta antiga de texto
+                const imgTipo = typeEmojisWeb[pokemon.type];
+                const badgeHtml = imgTipo 
+                    ? `<img src="${imgTipo}" alt="${pokemon.typeName}" class="type-emoji-badge">`
+                    : `<span class="type-badge" style="background: ${typeColor}">${pokemon.typeName}</span>`;
+                
                 card.innerHTML = `
                     <div class="pokemon-image-container" style="background: linear-gradient(135deg, ${typeColor}22 0%, ${typeColor}05 100%);">
                         ${pokemon.sprite ? `<img src="${pokemon.sprite}" alt="${pokemon.name}" class="pokemon-sprite" loading="lazy">` : '<div class="pokemon-sprite" style="display:flex;align-items:center;justify-content:center;color:#666;font-size:2rem">?</div>'}
@@ -271,7 +296,7 @@
                             <span class="pokemon-id">${pokemon.num}</span>
                             <h3 class="pokemon-name">${pokemon.name}</h3>
                         </div>
-                        <span class="type-badge" style="background: ${typeColor}">${pokemon.typeName}</span>
+                        ${badgeHtml}
                         <div class="info-grid">
                             <div class="info-item"><span class="info-icon">${icones.bioma}</span><div class="info-content"><div class="info-label">Bioma</div><div class="info-value">${pokemon.biome}</div></div></div>
                             <div class="info-item"><span class="info-icon">${icones.bloco}</span><div class="info-content"><div class="info-label">Bloco</div><div class="info-value">${pokemon.block || 'N/A'}</div></div></div>
