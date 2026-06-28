@@ -36,65 +36,140 @@
         .title { font-family: 'Orbitron', sans-serif; font-size: 3rem; font-weight: 900; background: linear-gradient(135deg, #E0AAFF 0%, #9D4EDD 50%, #7B2CBF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 4px; text-transform: uppercase; text-shadow: 0 0 30px rgba(157, 78, 221, 0.3); }
         .subtitle { font-size: 0.95rem; color: #bcaaa4; letter-spacing: 3px; text-transform: uppercase; margin-top: 0.5rem; font-weight: 300; }
         
-        /* 1. BUSCA FIXA (Sticky) */
+        /* =========================================
+           1. BUSCA ANIMADA FIXA NO TOPO
+           ========================================= */
         .search-section { 
-            background: rgba(15, 0, 30, 0.85); /* Fundo um pouco mais escuro pra destacar */
+            background: rgba(15, 0, 30, 0.85); 
             padding: 1.5rem 2rem; 
             border-bottom: 1px solid rgba(157, 78, 221, 0.4); 
             backdrop-filter: blur(12px); 
             -webkit-backdrop-filter: blur(12px);
-            
-            /* A mágica que faz grudar no topo: */
             position: sticky; 
             top: 0; 
-            z-index: 100; /* Garante que os Pokémons passem por baixo da barra */
+            z-index: 100; 
         }
         
-        .search-container { max-width: 700px; margin: 0 auto; }
-        .search-input { width: 100%; padding: 1rem 1.5rem; font-size: 1rem; border: 2px solid rgba(157, 78, 221, 0.3); border-radius: 50px; background: rgba(10, 10, 10, 0.8); color: var(--white); outline: none; transition: all 0.3s ease; font-family: 'Inter', sans-serif; }
-        .search-input:focus { border-color: var(--primary); box-shadow: 0 0 25px rgba(157, 78, 221, 0.3); transform: translateY(-2px); }
-        .search-input::placeholder { color: #666; }
+        .search-container { display: flex; justify-content: center; width: 100%; margin: 0 auto; }
         
-        /* 2. CARROSEL HORIZONTAL DOS FILTROS */
+        /* A Barra "Mágica" que estica */
+        .search-wrapper {
+            position: relative;
+            width: 55px; /* Tamanho inicial (só a bolinha da lupa) */
+            height: 55px;
+            border-radius: 50px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 2px solid rgba(157, 78, 221, 0.5);
+            transition: width 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55), border-color 0.3s ease;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-wrapper.expanded {
+            width: 100%;
+            max-width: 700px;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 25px rgba(157, 78, 221, 0.3);
+        }
+        
+        /* A Lupa que corre de um lado pro outro */
+        .search-icon-btn {
+            position: absolute;
+            right: 12px; /* Começa na direita */
+            width: 26px;
+            height: 26px;
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 10;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+        .search-wrapper.expanded .search-icon-btn {
+            right: calc(100% - 40px); /* Corre para a esquerda quando expande */
+        }
+        
+        /* O Input de texto invisível no começo */
+        .search-input {
+            width: 100%;
+            height: 100%;
+            padding: 0 45px 0 50px; 
+            background: transparent;
+            border: none;
+            color: var(--white);
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease 0.3s; /* Aparece com atraso */
+        }
+        .search-wrapper.expanded .search-input {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        /* Botão X para limpar */
+        .clear-btn {
+            position: absolute;
+            right: 15px;
+            color: #aaa;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease, color 0.2s;
+        }
+        .clear-btn:hover { color: var(--primary-light); }
+        .clear-btn.visible { opacity: 1; pointer-events: auto; }
+
+        /* =========================================
+           2. FILTROS EM CARROSSEL (Gerações e Tipos)
+           ========================================= */
+        .filter-section-title {
+            color: #888;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 1.5rem 0 0.5rem 0;
+            text-align: center;
+            font-weight: 700;
+        }
+           
         .filter-buttons { 
-            display: flex; 
-            gap: 0.6rem; 
-            justify-content: center; 
-            margin-top: 1.5rem; 
-            
-            /* Configuração do Carrossel contínuo */
-            overflow-x: auto; 
-            flex-wrap: nowrap; /* Impede de quebrar em várias linhas */
-            padding-bottom: 0.5rem;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch; /* Rolagem suave no iOS */
+            display: flex; gap: 0.6rem; justify-content: center; 
+            overflow-x: auto; flex-wrap: nowrap; padding-bottom: 0.5rem;
+            scroll-behavior: smooth; -webkit-overflow-scrolling: touch; 
         }
-        
-        /* Deixa a barrinha de rolagem dos filtros bem fininha e elegante */
         .filter-buttons::-webkit-scrollbar { height: 4px; }
         .filter-buttons::-webkit-scrollbar-track { background: transparent; }
         .filter-buttons::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
         
         .gen-btn { 
-            padding: 0.6rem 1.3rem; 
-            border: 2px solid rgba(157, 78, 221, 0.3); 
-            background: rgba(10, 10, 10, 0.6); 
-            color: #aaa; 
-            border-radius: 25px; 
-            cursor: pointer; 
-            font-weight: 600; 
-            transition: all 0.3s ease; 
-            font-family: 'Inter', sans-serif; 
-            font-size: 0.85rem; 
-            text-transform: uppercase; 
-            letter-spacing: 0.5px; 
-            
-            /* Impede que o botão seja esmagado no carrossel: */
-            flex-shrink: 0; 
-            white-space: nowrap;
+            padding: 0.6rem 1.3rem; border: 2px solid rgba(157, 78, 221, 0.3); 
+            background: rgba(10, 10, 10, 0.6); color: #aaa; border-radius: 25px; 
+            cursor: pointer; font-weight: 600; transition: all 0.3s ease; 
+            font-family: 'Inter', sans-serif; font-size: 0.85rem; 
+            text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; 
         }
-        .gen-btn:hover { border-color: var(--primary); color: var(--primary-light); transform: translateY(-2px); background: rgba(157, 78, 221, 0.1); }
-        .gen-btn.active { background: var(--primary); color: var(--white); border-color: var(--primary); box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4); }      
+        .gen-btn:hover, .gen-btn.active { border-color: var(--primary); color: var(--white); background: rgba(157, 78, 221, 0.2); box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4); }
+        
+        /* Botões Especiais de Tipo com Ícone + Mini Pokémon */
+        .type-btn {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.3rem 1.2rem 0.3rem 0.4rem;
+            border: 2px solid rgba(157, 78, 221, 0.3); background: rgba(10, 10, 10, 0.6);
+            color: #aaa; border-radius: 30px; cursor: pointer; transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.85rem;
+            flex-shrink: 0; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .type-btn:hover, .type-btn.active {
+            border-color: var(--primary); color: var(--white);
+            background: rgba(157, 78, 221, 0.2); box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4);
+        }
+        .type-btn-icon { height: 22px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+        .type-btn-rep { height: 35px; margin-left: 2px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
         .stats-bar { background: rgba(10, 10, 10, 0.8); padding: 1rem; text-align: center; border-bottom: 1px solid rgba(157, 78, 221, 0.1); font-size: 0.9rem; color: #888; }
         .stats-bar span { color: var(--primary-light); font-weight: 700; }
         
