@@ -597,49 +597,26 @@
         function renderPokemon() {
             const grid = document.getElementById('pokemonGrid');
             grid.innerHTML = '';
+            
+            // Agora filtra por Geração E por Tipo!
             const filtered = Object.values(pokemonCache).filter(p => {
-                const matchesGen = currentFilter === 'all' || p.gen == currentFilter;
+                const matchesGen = currentGenFilter === 'all' || p.gen == currentGenFilter;
+                const matchesType = currentTypeFilter === 'all' || p.type === currentTypeFilter;
                 const matchesSearch = !searchTerm || p.name.toLowerCase().includes(searchTerm) || p.num.toLowerCase().includes(searchTerm);
-                return matchesGen && matchesSearch;
+                return matchesGen && matchesType && matchesSearch;
             });
             
+            // O Psyduck Confuso Entra Aqui!
             if (!filtered.length) {
-                grid.innerHTML = '<div class="no-results">Nenhum Pokémon encontrado</div>';
+                grid.innerHTML = `
+                    <div class="no-results" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1rem; grid-column: 1 / -1;">
+                        <img src="1000474248.gif" alt="Psyduck" style="width: 120px; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5)); margin-bottom: 1.5rem;">
+                        <h2 style="font-family: 'Pokemon Solid', sans-serif; -webkit-text-stroke: 0.6px #000; color: #F8D030; letter-spacing: 2px; font-size: 1.8rem;">Psyduck est&aacute; confuso...</h2>
+                        <p style="color: #aaa; margin-top: 0.5rem; font-size: 1.1rem;">Nenhum Pok&eacute;mon encontrado com esse nome!</p>
+                    </div>`;
                 document.getElementById('showingCount').textContent = '0';
                 return;
             }
-            
-            filtered.forEach((pokemon) => {
-                const card = document.createElement('div');
-                card.className = 'pokemon-card';
-                const typeColor = typeColors[pokemon.type] || typeColors.normal;
-                
-                const imgTipo = typeEmojisWeb[pokemon.type];
-                const badgeHtml = imgTipo 
-                    ? `<img src="${imgTipo}" alt="${pokemon.typeName}" class="type-emoji-badge">`
-                    : `<span class="type-badge" style="background: ${typeColor}">${pokemon.typeName}</span>`;
-                
-                card.innerHTML = `
-                    <div class="pokemon-image-container" style="background: linear-gradient(135deg, ${typeColor}22 0%, ${typeColor}05 100%);">
-                        ${pokemon.sprite ? `<img src="${pokemon.sprite}" alt="${pokemon.name}" class="pokemon-sprite" loading="lazy">` : '<div class="pokemon-sprite" style="display:flex;align-items:center;justify-content:center;color:#666;font-size:2rem">?</div>'}
-                    </div>
-                    <div class="pokemon-info">
-                        <div class="pokemon-header">
-                            <span class="pokemon-id">${pokemon.num}</span>
-                            <h3 class="pokemon-name">${pokemon.name}</h3>
-                        </div>
-                        ${badgeHtml}
-                        <div class="info-grid">
-                            <div class="info-item"><span class="info-icon">${icones.bioma}</span><div class="info-content"><div class="info-label">Bioma</div><div class="info-value">${pokemon.biome}</div></div></div>
-                            <div class="info-item"><span class="info-icon">${icones.bloco}</span><div class="info-content"><div class="info-label">Bloco</div><div class="info-value">${pokemon.block || 'N/A'}</div></div></div>
-                            <div class="info-item"><span class="info-icon">${icones.condicao}</span><div class="info-content"><div class="info-label">Condição</div><div class="info-value">${pokemon.condition || 'Nenhuma'}</div></div></div>
-                            <div class="info-item"><span class="info-icon">${icones.raridade}</span><div class="info-content"><div class="info-label">Raridade</div><span class="rarity-badge ${getRarityClass(pokemon.rarity)}">${pokemon.rarity}</span></div></div>
-                        </div>
-                    </div>`;
-                grid.appendChild(card);
-            });
-            document.getElementById('showingCount').textContent = filtered.length;
-        }
 
         function getRarityClass(r) {
             r = r.toLowerCase();
