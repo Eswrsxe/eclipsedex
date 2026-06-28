@@ -22,8 +22,11 @@
         }
         body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #050505 0%, #10002b 50%, #240046 100%); color: var(--white); min-height: 100vh; overflow-x: hidden; }
         
-        .header { background: rgba(10, 10, 10, 0.95); border-bottom: 3px solid var(--primary); padding: 2rem; text-align: center; position: relative; backdrop-filter: blur(10px); box-shadow: 0 0 20px rgba(157, 78, 221, 0.2); }
+        /* CABEÇALHO E MENU HAMBURGUER */
+        .header { display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(10, 10, 10, 0.95); border-bottom: 3px solid var(--primary); padding: 2rem; position: relative; backdrop-filter: blur(10px); box-shadow: 0 0 20px rgba(157, 78, 221, 0.2); }
         .header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--primary-light), transparent); }
+        .hamburger-btn { position: absolute; left: 2rem; top: 50%; transform: translateY(-50%); font-size: 2.5rem; cursor: pointer; color: var(--primary-light); z-index: 101; transition: color 0.3s, transform 0.3s; user-select: none; }
+        .hamburger-btn:hover { color: var(--white); transform: translateY(-50%) scale(1.1); }
         
         .logo-container { display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin-bottom: 0.5rem; }
         .eclipse-icon { width: 70px; height: 70px; filter: drop-shadow(0 0 15px rgba(157, 78, 221, 0.8)); animation: float 4s ease-in-out infinite; }
@@ -32,30 +35,31 @@
         .title { font-family: 'Orbitron', sans-serif; font-size: 3rem; font-weight: 900; background: linear-gradient(135deg, #E0AAFF 0%, #9D4EDD 50%, #7B2CBF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 4px; text-transform: uppercase; text-shadow: 0 0 30px rgba(157, 78, 221, 0.3); }
         .subtitle { font-size: 0.95rem; color: #bcaaa4; letter-spacing: 3px; text-transform: uppercase; margin-top: 0.5rem; font-weight: 300; }
         
-        /* BUSCA E FILTROS ANIMADOS */
+        /* MENU LATERAL (SIDEBAR) */
+        .sidebar { position: fixed; top: 0; left: -300px; width: 280px; height: 100vh; background: rgba(10, 10, 10, 0.98); border-right: 2px solid var(--primary); z-index: 1000; transition: left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); padding: 3rem 0; display: flex; flex-direction: column; box-shadow: 10px 0 30px rgba(0,0,0,0.7); }
+        .sidebar.open { left: 0; }
+        .sidebar-header-title { font-family: 'Orbitron', sans-serif; color: var(--primary-light); font-size: 1.5rem; text-align: center; margin-bottom: 2rem; letter-spacing: 2px; border-bottom: 1px solid rgba(157, 78, 221, 0.3); padding-bottom: 1rem; }
+        .nav-link { padding: 1rem 2rem; color: #aaa; text-decoration: none; font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 15px; transition: all 0.3s; border-left: 4px solid transparent; cursor: pointer; }
+        .nav-link:hover, .nav-link.active { background: rgba(157, 78, 221, 0.1); color: var(--white); border-left-color: var(--primary); }
+        
+        .overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(3px); }
+        .overlay.active { opacity: 1; pointer-events: auto; }
+
+        /* VIEWS (Páginas Ocultas) */
+        .view-section { display: none; animation: fadeIn 0.4s ease; }
+        .view-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* PÁGINA: INÍCIO (Busca e Filtros) */
         .search-section { background: rgba(15, 0, 30, 0.85); padding: 1.5rem 2rem; border-bottom: 1px solid rgba(157, 78, 221, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; }
         .search-container { display: flex; justify-content: center; width: 100%; margin: 0 auto; }
         .search-wrapper { position: relative; width: 55px; height: 55px; border-radius: 50px; background: rgba(10, 10, 10, 0.8); border: 2px solid rgba(157, 78, 221, 0.5); transition: width 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55), border-color 0.3s ease; overflow: hidden; display: flex; align-items: center; }
         .search-wrapper.expanded { width: 100%; max-width: 700px; border-color: var(--primary-light); box-shadow: 0 0 25px rgba(157, 78, 221, 0.3); }
-        .search-icon-btn {
-            position: absolute;
-            right: 14px; 
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55), stroke 0.3s ease;
-            z-index: 10;
-            stroke: var(--primary-light); /* Cor roxa clara do seu tema */
-            filter: drop-shadow(0 2px 5px rgba(157, 78, 221, 0.4));
-        }
         
-        .search-icon-btn:hover {
-            stroke: var(--white); /* Fica branca ao passar o mouse */
-        }
+        .search-icon-btn { position: absolute; right: 14px; width: 24px; height: 24px; cursor: pointer; transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55), stroke 0.3s ease; z-index: 10; stroke: var(--primary-light); filter: drop-shadow(0 2px 5px rgba(157, 78, 221, 0.4)); }
+        .search-icon-btn:hover { stroke: var(--white); }
+        .search-wrapper.expanded .search-icon-btn { right: calc(100% - 40px); }
         
-        .search-wrapper.expanded .search-icon-btn {
-            right: calc(100% - 40px); /* Corre para a esquerda quando expande */
-        }
         .search-input { width: 100%; height: 100%; padding: 0 45px 0 50px; background: transparent; border: none; color: var(--white); font-size: 1rem; font-family: 'Inter', sans-serif; outline: none; opacity: 0; pointer-events: none; transition: opacity 0.3s ease 0.3s; }
         .search-wrapper.expanded .search-input { opacity: 1; pointer-events: auto; }
         .clear-btn { position: absolute; right: 15px; color: #aaa; background: none; border: none; font-size: 1.2rem; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity 0.2s ease, color 0.2s; }
@@ -106,6 +110,42 @@
         .info-value { font-size: 0.95rem; color: var(--white); font-weight: 500; line-height: 1.4; }
         .rarity-badge { display: inline-block; padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
         
+        /* PÁGINA: FRAQUEZAS (Tabelas de Tipos) */
+        .fraquezas-container { padding: 2rem; max-width: 1000px; margin: 0 auto; }
+        .fraquezas-title { font-family: 'Orbitron', sans-serif; text-align: center; font-size: 2.2rem; color: var(--primary-light); margin-bottom: 2rem; text-shadow: 0 0 15px rgba(157, 78, 221, 0.4); }
+        
+        .type-chart-box {
+            background: linear-gradient(180deg, #1A3C5A 0%, #157E86 100%);
+            border-radius: 15px; padding: 2rem; box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            overflow-x: auto; margin-bottom: 4rem; border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .type-chart-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        .type-chart-table th { color: #fff; text-transform: uppercase; letter-spacing: 2px; padding: 1rem; border-bottom: 2px solid rgba(255,255,255,0.3); font-weight: 600; }
+        .type-chart-table th:first-child { text-align: left; }
+        .type-chart-table td { padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.15); }
+        .type-chart-table tr:last-child td { border-bottom: none; }
+        
+        .type-name-cell { display: flex; align-items: center; gap: 12px; color: #fff; font-weight: 600; font-size: 1.1rem; letter-spacing: 1px; }
+        .icon-list { display: flex; gap: 6px; flex-wrap: wrap; }
+        .icon-list img { width: 30px; height: 30px; filter: drop-shadow(0 3px 5px rgba(0,0,0,0.5)); transition: transform 0.2s; }
+        .icon-list img:hover { transform: scale(1.2); }
+
+        /* TABELA DA DEX ESPECÍFICA */
+        .dex-weakness-table-container { overflow-x: auto; background: rgba(15, 0, 30, 0.6); border-radius: 15px; border: 1px solid rgba(157, 78, 221, 0.2); padding: 1rem; }
+        .dex-weakness-table { width: 100%; border-collapse: separate; border-spacing: 0 10px; min-width: 600px; }
+        .dex-weakness-table th { color: var(--primary-light); text-align: left; padding: 0 1rem; font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 1px; }
+        .dex-weakness-table td { background: rgba(20,20,20,0.8); padding: 1rem; transition: background 0.2s; }
+        .dex-weakness-table tr:hover td { background: rgba(157, 78, 221, 0.15); }
+        .dex-weakness-table td:first-child { border-radius: 10px 0 0 10px; border-left: 2px solid transparent; }
+        .dex-weakness-table tr:hover td:first-child { border-left-color: var(--primary); }
+        .dex-weakness-table td:last-child { border-radius: 0 10px 10px 0; }
+        
+        .pokemon-row-info { display: flex; align-items: center; gap: 15px; }
+        .pokemon-row-sprite { width: 55px; height: 55px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); }
+        .pokemon-row-name { font-weight: 700; color: #fff; font-size: 1.2rem; font-family: 'Inter', sans-serif; text-transform: capitalize; }
+        .pokemon-row-id { color: #888; font-size: 0.85rem; font-family: 'Orbitron', sans-serif; margin-bottom: 2px; }
+
         .footer { background: rgba(10, 10, 10, 0.95); border-top: 3px solid var(--primary); padding: 3rem 2rem; text-align: center; margin-top: 4rem; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); }
         .footer-brand { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; color: var(--primary-light); margin-bottom: 1rem; font-weight: 700; }
         .server-box { display: inline-flex; flex-direction: column; gap: 0.5rem; background: rgba(157, 78, 221, 0.05); padding: 1.5rem 2.5rem; border-radius: 15px; border: 1px solid rgba(157, 78, 221, 0.3); margin: 1rem 0; }
@@ -120,7 +160,14 @@
         .minecraft-circle { background: #535C39; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4); }
         .minecraft-circle:hover { transform: translateY(-5px) scale(1.1); box-shadow: 0 8px 25px rgba(76, 175, 80, 0.6); background: #333; }
         
-        @media (max-width: 768px) { .title { font-size: 2rem; } .pokemon-grid { grid-template-columns: 1fr; } .header { padding: 1.5rem 1rem; } .filter-buttons { justify-content: flex-start; } .filter-buttons::after { content: ''; padding-right: 1rem; } }
+        @media (max-width: 768px) { 
+            .title { font-size: 2rem; } 
+            .pokemon-grid { grid-template-columns: 1fr; } 
+            .header { padding: 1.5rem 1rem; } 
+            .hamburger-btn { top: 1.5rem; left: 1rem; font-size: 2rem; }
+            .filter-buttons { justify-content: flex-start; } 
+            .filter-buttons::after { content: ''; padding-right: 1rem; } 
+        }
         ::-webkit-scrollbar { width: 10px; } ::-webkit-scrollbar-track { background: var(--black); } ::-webkit-scrollbar-thumb { background: var(--primary-dark); border-radius: 5px; } ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
         
         .rarity-comum { background: #4CAF50; color: white; } .rarity-incomum { background: #8BC34A; color: white; } .rarity-raro { background: #FFC107; color: black; } .rarity-muito-raro { background: #FF9800; color: white; } .rarity-extremo { background: #F44336; color: white; } .rarity-lendario { background: linear-gradient(135deg, #9D4EDD, #C77DFF); color: white; animation: shine 3s infinite; } .rarity-mitico { background: linear-gradient(135deg, #00BCD4, #9D4EDD); color: white; animation: shine 3s infinite; }
@@ -131,7 +178,21 @@
     </style>
 </head>
 <body>
+
+    <!-- SIDEBAR MENU OCULTO -->
+    <div class="overlay" id="overlay"></div>
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header-title">Menu Oficial</div>
+        <a class="nav-link active" data-target="view-inicio">
+            🏠 Início (Pokedex)
+        </a>
+        <a class="nav-link" data-target="view-fraquezas">
+            ⚔️ Vantagens e Fraquezas
+        </a>
+    </nav>
+
     <header class="header">
+        <div class="hamburger-btn" id="menuToggle">☰</div>
         <div class="logo-container">
             <svg class="eclipse-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="50" cy="50" r="45" stroke="#9D4EDD" stroke-width="3" fill="none"/>
@@ -144,56 +205,105 @@
         <p class="subtitle">Spawn de todos os pokemons do servidor</p>
     </header>
 
-    <section class="search-section">
-        <div class="search-container">
-            <div class="search-wrapper" id="searchWrapper">
-                <svg class="search-icon-btn" id="searchIconBtn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                <input type="text" class="search-input" id="searchInput" placeholder="Digite o nome ou ID do Pokémon...">
-                <button class="clear-btn" id="clearBtn">✖</button>
+    <!-- ============================================== -->
+    <!-- VIEW 1: INÍCIO (POKEDEX)                       -->
+    <!-- ============================================== -->
+    <main id="view-inicio" class="view-section active">
+        <section class="search-section">
+            <div class="search-container">
+                <div class="search-wrapper" id="searchWrapper">
+                    <svg class="search-icon-btn" id="searchIconBtn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Digite o nome ou ID do Pokémon...">
+                    <button class="clear-btn" id="clearBtn">✖</button>
+                </div>
+            </div>
+
+            <div class="filter-section-title">Filtrar por Geração</div>
+            <div class="filter-buttons" id="genFilters">
+                <button class="gen-btn active" data-gen="all">Todas</button>
+                <button class="gen-btn" data-gen="1">Gen 1</button>
+                <button class="gen-btn" data-gen="2">Gen 2</button>
+                <button class="gen-btn" data-gen="3">Gen 3</button>
+                <button class="gen-btn" data-gen="4">Gen 4</button>
+                <button class="gen-btn" data-gen="5">Gen 5</button>
+                <button class="gen-btn" data-gen="6">Gen 6</button>
+                <button class="gen-btn" data-gen="7">Gen 7</button>
+                <button class="gen-btn" data-gen="8">Gen 8</button>
+                <button class="gen-btn" data-gen="9">Gen 9</button>
+            </div>
+
+            <div class="filter-section-title">Filtrar por Tipo</div>
+            <div class="filter-buttons" id="typeFilters">
+                <button class="type-btn active" data-type="all">Todos os Tipos</button>
+            </div>
+        </section>
+
+        <div class="stats-bar">
+            Total: <span id="totalCount">0</span> Pokémon • Mostrando: <span id="showingCount">0</span>
+        </div>
+
+        <div class="loading-state" id="loadingState">
+            <div class="loading-track">
+                <div class="legendary-container" id="legendaryMover">
+                    <img src="https://play.pokemonshowdown.com/sprites/ani/solgaleo.gif" id="legendaryIcon" alt="Loading...">
+                </div>
+            </div>
+            <div id="loadingText" style="font-family: 'Orbitron', sans-serif; color: var(--primary-light); font-size: 1.1rem; letter-spacing: 2px;">
+                Carregando Animações... 0%
             </div>
         </div>
 
-        <div class="filter-section-title">Filtrar por Geração</div>
-        <div class="filter-buttons" id="genFilters">
-            <button class="gen-btn active" data-gen="all">Todas</button>
-            <button class="gen-btn" data-gen="1">Gen 1</button>
-            <button class="gen-btn" data-gen="2">Gen 2</button>
-            <button class="gen-btn" data-gen="3">Gen 3</button>
-            <button class="gen-btn" data-gen="4">Gen 4</button>
-            <button class="gen-btn" data-gen="5">Gen 5</button>
-            <button class="gen-btn" data-gen="6">Gen 6</button>
-            <button class="gen-btn" data-gen="7">Gen 7</button>
-            <button class="gen-btn" data-gen="8">Gen 8</button>
-            <button class="gen-btn" data-gen="9">Gen 9</button>
+        <div class="container">
+            <div id="pokemonGrid" class="pokemon-grid" style="display:none;"></div>
         </div>
+    </main>
 
-        <div class="filter-section-title">Filtrar por Tipo</div>
-        <div class="filter-buttons" id="typeFilters">
-            <button class="type-btn active" data-type="all">Todos os Tipos</button>
-        </div>
-    </section>
+    <!-- ============================================== -->
+    <!-- VIEW 2: FRAQUEZAS                              -->
+    <!-- ============================================== -->
+    <main id="view-fraquezas" class="view-section">
+        <div class="fraquezas-container">
+            <h2 class="fraquezas-title">⚔️ Vantagens e Fraquezas</h2>
+            
+            <!-- Tabela Gráfica Bonitona -->
+            <div class="type-chart-box">
+                <table class="type-chart-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Vantagem</th>
+                            <th>Desvantagem</th>
+                        </tr>
+                    </thead>
+                    <tbody id="typeChartBody">
+                        <!-- Gerado via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
 
-    <div class="stats-bar">
-        Total: <span id="totalCount">0</span> Pokémon • Mostrando: <span id="showingCount">0</span>
-    </div>
-
-    <div class="loading-state" id="loadingState">
-        <div class="loading-track">
-            <div class="legendary-container" id="legendaryMover">
-                <img src="https://play.pokemonshowdown.com/sprites/ani/solgaleo.gif" id="legendaryIcon" alt="Loading...">
+            <h2 class="fraquezas-title" style="margin-top: 5rem; font-size: 1.8rem;">📜 Fraquezas da EclipseDex</h2>
+            <p style="color: #aaa; text-align: center; margin-bottom: 2rem;">Consulte abaixo a lista de todos os Pokémons do servidor e os elementos que causam o dobro de dano neles.</p>
+            
+            <!-- Tabela de Pokémons -->
+            <div class="dex-weakness-table-container">
+                <table class="dex-weakness-table">
+                    <thead>
+                        <tr>
+                            <th>Pokémon</th>
+                            <th>Tipo Base</th>
+                            <th>Fraquezas (Desvantagens)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dexWeaknessBody">
+                        <!-- Gerado via JavaScript -->
+                    </tbody>
+                </table>
             </div>
         </div>
-        <div id="loadingText" style="font-family: 'Orbitron', sans-serif; color: var(--primary-light); font-size: 1.1rem; letter-spacing: 2px;">
-            Carregando Animações... 0%
-        </div>
-    </div>
-
-    <div class="container">
-        <div id="pokemonGrid" class="pokemon-grid" style="display:none;"></div>
-    </div>
+    </main>
 
     <footer class="footer">
         <div class="footer-brand">🌘 | 𝙀𝙘𝙡𝙞𝙥𝙨𝙚𝙋𝙤𝙠𝙚</div>
@@ -212,6 +322,7 @@
         </div>
     </footer>
 
+    <!-- A ORDEM IMPORTA MUITO! -->
     <script src="database.js"></script>
 
     <script>
@@ -241,28 +352,157 @@
         let searchTerm = '', pokemonCache = {};
 
         const typeReps = {
-            fire: { name: 'Fogo', rep: 'charizard' }, water: { name: 'Água', rep: 'blastoise' },
-            grass: { name: 'Planta', rep: 'venusaur' }, electric: { name: 'Elétrico', rep: 'pikachu' },
-            ice: { name: 'Gelo', rep: 'lapras' }, fighting: { name: 'Lutador', rep: 'machamp' },
-            poison: { name: 'Venenoso', rep: 'gengar' }, ground: { name: 'Terra', rep: 'groudon' },
-            flying: { name: 'Voador', rep: 'pidgeot' }, psychic: { name: 'Psíquico', rep: 'mewtwo' },
-            bug: { name: 'Inseto', rep: 'scyther' }, rock: { name: 'Pedra', rep: 'onix' },
-            ghost: { name: 'Fantasma', rep: 'gengar' }, dragon: { name: 'Dragão', rep: 'dragonite' },
-            dark: { name: 'Sombrio', rep: 'umbreon' }, steel: { name: 'Aço', rep: 'lucario' },
-            fairy: { name: 'Fada', rep: 'sylveon' }, normal: { name: 'Normal', rep: 'snorlax' }
+            steel: { name: 'Aço', rep: 'lucario' }, water: { name: 'Água', rep: 'blastoise' },
+            dragon: { name: 'Dragão', rep: 'dragonite' }, electric: { name: 'Elétrico', rep: 'pikachu' },
+            fairy: { name: 'Fada', rep: 'sylveon' }, ghost: { name: 'Fantasma', rep: 'gengar' },
+            fire: { name: 'Fogo', rep: 'charizard' }, ice: { name: 'Gelo', rep: 'lapras' },
+            bug: { name: 'Inseto', rep: 'scyther' }, fighting: { name: 'Lutador', rep: 'machamp' },
+            normal: { name: 'Normal', rep: 'snorlax' }, rock: { name: 'Pedra', rep: 'onix' },
+            grass: { name: 'Planta', rep: 'venusaur' }, psychic: { name: 'Psíquico', rep: 'mewtwo' },
+            dark: { name: 'Sombrio', rep: 'umbreon' }, ground: { name: 'Terra', rep: 'groudon' },
+            poison: { name: 'Venenoso', rep: 'gengar' }, flying: { name: 'Voador', rep: 'pidgeot' }
+        };
+
+        // MATRIZ EXATA DE FRAQUEZAS E VANTAGENS (Baseado na Imagem Oficial)
+        const typeMatchups = {
+            steel: { v: ['fairy', 'ice', 'rock'], d: ['fire', 'ground', 'fighting'] },
+            water: { v: ['fire', 'ground', 'rock'], d: ['electric', 'grass'] },
+            dragon: { v: ['dragon'], d: ['dragon', 'fairy', 'ice'] },
+            electric: { v: ['water', 'flying'], d: ['ground'] },
+            fairy: { v: ['dragon', 'fighting', 'dark'], d: ['steel', 'poison'] },
+            ghost: { v: ['ghost', 'psychic'], d: ['ghost', 'dark'] },
+            fire: { v: ['steel', 'ice', 'bug', 'grass'], d: ['water', 'rock', 'ground'] },
+            ice: { v: ['dragon', 'grass', 'ground', 'flying'], d: ['steel', 'fire', 'fighting', 'rock'] },
+            bug: { v: ['grass', 'psychic', 'dark'], d: ['fire', 'rock', 'flying'] },
+            fighting: { v: ['steel', 'ice', 'normal', 'rock', 'dark'], d: ['fairy', 'psychic', 'flying'] },
+            normal: { v: [], d: ['fighting'] },
+            rock: { v: ['fire', 'ice', 'bug', 'flying'], d: ['steel', 'water', 'fighting', 'grass', 'ground'] },
+            grass: { v: ['water', 'rock', 'ground'], d: ['ice', 'fire', 'bug', 'poison', 'flying'] },
+            psychic: { v: ['fighting', 'poison'], d: ['bug', 'ghost', 'dark'] },
+            dark: { v: ['ghost', 'psychic'], d: ['fairy', 'bug', 'fighting'] },
+            ground: { v: ['steel', 'electric', 'fire', 'rock', 'poison'], d: ['water', 'ice', 'grass'] },
+            poison: { v: ['fairy', 'grass'], d: ['psychic', 'ground'] },
+            flying: { v: ['bug', 'fighting', 'grass'], d: ['electric', 'ice', 'rock'] }
         };
 
         document.addEventListener('DOMContentLoaded', () => {
+            setupSidebar();
             applyInitialSearchFromUrl();
             generateTypeButtons();
             setupEventListeners();
             loadPokemonData();
         });
 
+        // ==========================================
+        // LÓGICA DO MENU LATERAL OCULTO
+        // ==========================================
+        function setupSidebar() {
+            const toggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            function fecharMenu() {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+            }
+
+            toggle.addEventListener('click', () => {
+                sidebar.classList.add('open');
+                overlay.classList.add('active');
+            });
+            overlay.addEventListener('click', fecharMenu);
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+
+                    // Alterna entre Início e Fraquezas
+                    const targetId = link.getAttribute('data-target');
+                    document.querySelectorAll('.view-section').forEach(view => {
+                        view.classList.remove('active');
+                        if (view.id === targetId) view.classList.add('active');
+                    });
+                    fecharMenu();
+                });
+            });
+        }
+
+        // ==========================================
+        // LÓGICA DA PÁGINA FRAQUEZAS
+        // ==========================================
+        function renderFraquezasViews() {
+            // 1. Gera a Tabela Gráfica
+            const chartTbody = document.getElementById('typeChartBody');
+            chartTbody.innerHTML = '';
+            
+            Object.keys(typeMatchups).forEach(type => {
+                const data = typeMatchups[type];
+                const tr = document.createElement('tr');
+                
+                const getIconsHtml = (arrayTipos) => {
+                    if (!arrayTipos || arrayTipos.length === 0) return '<span style="color:#aaa;font-size:0.9rem;">Nenhuma</span>';
+                    return arrayTipos.map(t => `<img src="${typeEmojisWeb[t]}" title="${typeReps[t].name}">`).join('');
+                };
+
+                tr.innerHTML = `
+                    <td>
+                        <div class="type-name-cell">
+                            <img src="${typeEmojisWeb[type]}" alt="${typeReps[type].name}" style="width:30px;">
+                            ${typeReps[type].name}
+                        </div>
+                    </td>
+                    <td><div class="icon-list">${getIconsHtml(data.v)}</div></td>
+                    <td><div class="icon-list">${getIconsHtml(data.d)}</div></td>
+                `;
+                chartTbody.appendChild(tr);
+            });
+
+            // 2. Gera a Tabela Dinâmica da Dex
+            const dexTbody = document.getElementById('dexWeaknessBody');
+            dexTbody.innerHTML = '';
+            
+            Object.values(pokemonCache).forEach(pokemon => {
+                const tr = document.createElement('tr');
+                const pType = pokemon.type;
+                const matchData = typeMatchups[pType];
+                
+                let weaknessesHtml = '-';
+                if (matchData && matchData.d) {
+                    weaknessesHtml = matchData.d.map(t => `<img src="${typeEmojisWeb[t]}" title="${typeReps[t].name}">`).join('');
+                }
+
+                const badgeHtml = typeEmojisWeb[pType] 
+                    ? `<img src="${typeEmojisWeb[pType]}" style="height:32px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">` 
+                    : `<span style="color:#fff;">${pokemon.typeName}</span>`;
+
+                tr.innerHTML = `
+                    <td>
+                        <div class="pokemon-row-info">
+                            ${pokemon.sprite ? `<img src="${pokemon.sprite}" class="pokemon-row-sprite">` : ''}
+                            <div>
+                                <div class="pokemon-row-id">${pokemon.num}</div>
+                                <div class="pokemon-row-name">${pokemon.name}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${badgeHtml}</td>
+                    <td><div class="icon-list">${weaknessesHtml}</div></td>
+                `;
+                dexTbody.appendChild(tr);
+            });
+        }
+
+        // ==========================================
+        // FUNCIONALIDADES EXISTENTES (NÃO ALTERADO)
+        // ==========================================
         function applyInitialSearchFromUrl() {
             const params = new URLSearchParams(window.location.search);
             const initialSearch = (params.get('search') || params.get('q') || '').trim();
-            const initialType = params.get('type'); // Lê o tipo vindo do Discord!
+            const initialType = params.get('type');
 
             if (initialSearch) {
                 const input = document.getElementById('searchInput');
@@ -272,8 +512,6 @@
 
             if (initialType) {
                 currentTypeFilter = initialType;
-                
-                // Dá um tempinho para os botões serem gerados e marca o botão certo como "Ativo"
                 setTimeout(() => {
                     const btn = document.querySelector(`.type-btn[data-type="${initialType}"]`);
                     if (btn) {
@@ -392,7 +630,10 @@
                     document.getElementById('searchWrapper').classList.add('expanded');
                     document.getElementById('clearBtn').classList.add('visible');
                 }
+                
                 renderPokemon();
+                // RENDERIZA AS TABELAS DE FRAQUEZA ASSIM QUE TUDO CARREGAR
+                renderFraquezasViews();
                 
             } catch (error) {
                 loadingState.innerHTML = '<div style="color: #f44336; font-family: Orbitron; font-size: 1.2rem;">Erro ao carregar os dados. Recarregue a página!</div>';
