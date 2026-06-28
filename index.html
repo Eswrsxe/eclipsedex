@@ -329,11 +329,19 @@
     </header>
 
     <section class="search-section">
+        <!-- Barra Animada -->
         <div class="search-container">
-            <input type="text" class="search-input" id="searchInput" placeholder="Buscar Pokémon por nome ou ID...">
+            <div class="search-wrapper" id="searchWrapper">
+                <img src="1000474249.png" alt="Buscar" class="search-icon-btn" id="searchIconBtn">
+                <input type="text" class="search-input" id="searchInput" placeholder="Digite o nome ou ID do Pokémon...">
+                <button class="clear-btn" id="clearBtn">✖</button>
+            </div>
         </div>
-        <div class="filter-buttons" id="filterButtons">
-            <button class="gen-btn active" data-gen="all">Todos</button>
+
+        <!-- Filtros Geração -->
+        <div class="filter-section-title">Filtrar por Geração</div>
+        <div class="filter-buttons" id="genFilters">
+            <button class="gen-btn active" data-gen="all">Todas</button>
             <button class="gen-btn" data-gen="1">Gen 1</button>
             <button class="gen-btn" data-gen="2">Gen 2</button>
             <button class="gen-btn" data-gen="3">Gen 3</button>
@@ -343,6 +351,13 @@
             <button class="gen-btn" data-gen="7">Gen 7</button>
             <button class="gen-btn" data-gen="8">Gen 8</button>
             <button class="gen-btn" data-gen="9">Gen 9</button>
+        </div>
+
+        <!-- Filtros Tipo -->
+        <div class="filter-section-title">Filtrar por Tipo</div>
+        <div class="filter-buttons" id="typeFilters">
+            <button class="type-btn active" data-type="all">Todos os Tipos</button>
+            <!-- Os botões de tipo com os sprites serão gerados automaticamente pelo JS! -->
         </div>
     </section>
 
