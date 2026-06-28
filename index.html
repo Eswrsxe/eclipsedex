@@ -131,16 +131,35 @@
         /* CORREÇÃO AQUI: Quebra de texto garantida no IP */
         .server-value { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; color: var(--white); font-weight: 700; text-shadow: 0 0 10px rgba(157, 78, 221, 0.5); word-break: break-word; max-width: 100%; }
         
+        /* Container dos botões */
         .social-buttons { display: flex; justify-content: center; gap: 1.5rem; margin-top: 1.5rem; }
-        .circle-btn { display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; border-radius: 50%; color: white; text-decoration: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         
+        /* Formato do botão redondo */
+        .circle-btn { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            width: 65px; 
+            height: 65px; 
+            border-radius: 50%; 
+            text-decoration: none; 
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+        
+        /* REGRA MÁGICA: Trava o tamanho exato de qualquer imagem dentro dos botões */
+        .circle-btn img { 
+            width: 36px; 
+            height: 36px; 
+            object-fit: contain; 
+        }
+        
+        /* Cores e Sombras - Discord */
         .discord-circle { background: #5865F2; box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4); }
         .discord-circle:hover { transform: translateY(-5px) scale(1.1); box-shadow: 0 8px 25px rgba(88, 101, 242, 0.6); }
-        .discord-circle svg { width: 32px; height: 32px; }
         
-        .minecraft-circle { background: #7E8C54; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4); } /* Fundo escuro para destacar o Creeper */
+        /* Cores e Sombras - Minecraft */
+        .minecraft-circle { background: #2a2a2a; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4); }
         .minecraft-circle:hover { transform: translateY(-5px) scale(1.1); box-shadow: 0 8px 25px rgba(76, 175, 80, 0.6); background: #333; }
-        .minecraft-circle img { width: 45px; height: 45px; object-fit: contain; }
         
         @media (max-width: 768px) { .title { font-size: 2rem; } .pokemon-grid { grid-template-columns: 1fr; } .header { padding: 1.5rem 1rem; } }
         
