@@ -432,23 +432,96 @@
             raridade: '<img src="https://cdn.discordapp.com/emojis/1518021814322725117.png" style="width: 20px; vertical-align: middle;">'
         };
 
-        let currentFilter = 'all', searchTerm = '', pokemonCache = {};
+        let currentGenFilter = 'all';
+        let currentTypeFilter = 'all';
+        let searchTerm = '', pokemonCache = {};
+
+        // 🌟 Nossos Embaixadores de Tipo (O Pokémon que melhor representa o tipo na UI)
+        const typeReps = {
+            fire: { name: 'Fogo', rep: 'charizard' }, water: { name: 'Água', rep: 'blastoise' },
+            grass: { name: 'Planta', rep: 'venusaur' }, electric: { name: 'Elétrico', rep: 'pikachu' },
+            ice: { name: 'Gelo', rep: 'lapras' }, fighting: { name: 'Lutador', rep: 'machamp' },
+            poison: { name: 'Venenoso', rep: 'gengar' }, ground: { name: 'Terra', rep: 'groudon' },
+            flying: { name: 'Voador', rep: 'pidgeot' }, psychic: { name: 'Psíquico', rep: 'mewtwo' },
+            bug: { name: 'Inseto', rep: 'scyther' }, rock: { name: 'Pedra', rep: 'onix' },
+            ghost: { name: 'Fantasma', rep: 'gengar' }, dragon: { name: 'Dragão', rep: 'dragonite' },
+            dark: { name: 'Sombrio', rep: 'umbreon' }, steel: { name: 'Aço', rep: 'lucario' },
+            fairy: { name: 'Fada', rep: 'sylveon' }, normal: { name: 'Normal', rep: 'snorlax' }
+        };
 
         document.addEventListener('DOMContentLoaded', () => {
             applyInitialSearchFromUrl();
+            generateTypeButtons();
             setupEventListeners();
             loadPokemonData();
         });
 
-        function applyInitialSearchFromUrl() {
-            const params = new URLSearchParams(window.location.search);
-            const initialSearch = (params.get('search') || params.get('q') || '').trim();
+        // Gera os botões de tipo automaticamente com os ícones e sprites
+        function generateTypeButtons() {
+            const container = document.getElementById('typeFilters');
+            Object.keys(typeEmojisWeb).forEach(type => {
+                if (typeReps[type]) {
+                    const btn = document.createElement('button');
+                    btn.className = 'type-btn';
+                    btn.dataset.type = type;
+                    btn.innerHTML = `
+                        <img src="${typeEmojisWeb[type]}" class="type-btn-icon" alt="${type}">
+                        ${typeReps[type].name}
+                        <img src="https://play.pokemonshowdown.com/sprites/ani/${typeReps[type].rep}.gif" class="type-btn-rep">
+                    `;
+                    container.appendChild(btn);
+                }
+            });
+        }
 
-            if (initialSearch) {
-                const input = document.getElementById('searchInput');
-                if (input) input.value = initialSearch;
-                searchTerm = initialSearch.toLowerCase();
-            }
+        function setupEventListeners() {
+            const wrapper = document.getElementById('searchWrapper');
+            const iconBtn = document.getElementById('searchIconBtn');
+            const input = document.getElementById('searchInput');
+            const clearBtn = document.getElementById('clearBtn');
+
+            // Animação da Lupa
+            iconBtn.addEventListener('click', () => {
+                wrapper.classList.add('expanded');
+                input.focus();
+            });
+
+            // Lógica de digitação e botão X
+            input.addEventListener('input', (e) => { 
+                searchTerm = e.target.value.toLowerCase(); 
+                clearBtn.classList.toggle('visible', searchTerm.length > 0);
+                renderPokemon(); 
+            });
+
+            clearBtn.addEventListener('click', () => {
+                input.value = '';
+                searchTerm = '';
+                clearBtn.classList.remove('visible');
+                // Se quiser que a barra feche ao limpar, ative a linha abaixo:
+                // wrapper.classList.remove('expanded'); 
+                renderPokemon();
+                input.focus();
+            });
+
+            // Filtros de Geração
+            document.querySelectorAll('.gen-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.gen-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    currentGenFilter = e.target.dataset.gen;
+                    renderPokemon();
+                });
+            });
+
+            // Filtros de Tipo
+            document.getElementById('typeFilters').addEventListener('click', (e) => {
+                const btn = e.target.closest('.type-btn');
+                if (!btn) return;
+                document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentTypeFilter = btn.dataset.type;
+                renderPokemon();
+            });
         }
 
         function setupEventListeners() {
