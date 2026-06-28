@@ -734,6 +734,13 @@
             if (r.includes('mítico')) return 'rarity-mitico';
             return 'rarity-comum';
         }
+
+        const minimizeBtn = document.getElementById('minimizeBtn');
+        const searchSection = document.getElementById('searchSection');
+        
+        minimizeBtn.addEventListener('click', () => {
+            searchSection.classList.toggle('minimized');
+        });
     </script>
 </body>
 </html>
