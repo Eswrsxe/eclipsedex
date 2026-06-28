@@ -36,17 +36,65 @@
         .title { font-family: 'Orbitron', sans-serif; font-size: 3rem; font-weight: 900; background: linear-gradient(135deg, #E0AAFF 0%, #9D4EDD 50%, #7B2CBF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 4px; text-transform: uppercase; text-shadow: 0 0 30px rgba(157, 78, 221, 0.3); }
         .subtitle { font-size: 0.95rem; color: #bcaaa4; letter-spacing: 3px; text-transform: uppercase; margin-top: 0.5rem; font-weight: 300; }
         
-        .search-section { background: rgba(20, 0, 40, 0.6); padding: 2rem; border-bottom: 1px solid rgba(157, 78, 221, 0.2); backdrop-filter: blur(5px); }
+        /* 1. BUSCA FIXA (Sticky) */
+        .search-section { 
+            background: rgba(15, 0, 30, 0.85); /* Fundo um pouco mais escuro pra destacar */
+            padding: 1.5rem 2rem; 
+            border-bottom: 1px solid rgba(157, 78, 221, 0.4); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            
+            /* A mágica que faz grudar no topo: */
+            position: sticky; 
+            top: 0; 
+            z-index: 100; /* Garante que os Pokémons passem por baixo da barra */
+        }
+        
         .search-container { max-width: 700px; margin: 0 auto; }
         .search-input { width: 100%; padding: 1rem 1.5rem; font-size: 1rem; border: 2px solid rgba(157, 78, 221, 0.3); border-radius: 50px; background: rgba(10, 10, 10, 0.8); color: var(--white); outline: none; transition: all 0.3s ease; font-family: 'Inter', sans-serif; }
         .search-input:focus { border-color: var(--primary); box-shadow: 0 0 25px rgba(157, 78, 221, 0.3); transform: translateY(-2px); }
         .search-input::placeholder { color: #666; }
         
-        .filter-buttons { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin-top: 1.5rem; }
-        .gen-btn { padding: 0.6rem 1.3rem; border: 2px solid rgba(157, 78, 221, 0.3); background: rgba(10, 10, 10, 0.6); color: #aaa; border-radius: 25px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; font-family: 'Inter', sans-serif; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        .gen-btn:hover { border-color: var(--primary); color: var(--primary-light); transform: translateY(-2px); background: rgba(157, 78, 221, 0.1); }
-        .gen-btn.active { background: var(--primary); color: var(--white); border-color: var(--primary); box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4); }
+        /* 2. CARROSEL HORIZONTAL DOS FILTROS */
+        .filter-buttons { 
+            display: flex; 
+            gap: 0.6rem; 
+            justify-content: center; 
+            margin-top: 1.5rem; 
+            
+            /* Configuração do Carrossel contínuo */
+            overflow-x: auto; 
+            flex-wrap: nowrap; /* Impede de quebrar em várias linhas */
+            padding-bottom: 0.5rem;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch; /* Rolagem suave no iOS */
+        }
         
+        /* Deixa a barrinha de rolagem dos filtros bem fininha e elegante */
+        .filter-buttons::-webkit-scrollbar { height: 4px; }
+        .filter-buttons::-webkit-scrollbar-track { background: transparent; }
+        .filter-buttons::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+        
+        .gen-btn { 
+            padding: 0.6rem 1.3rem; 
+            border: 2px solid rgba(157, 78, 221, 0.3); 
+            background: rgba(10, 10, 10, 0.6); 
+            color: #aaa; 
+            border-radius: 25px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            transition: all 0.3s ease; 
+            font-family: 'Inter', sans-serif; 
+            font-size: 0.85rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            
+            /* Impede que o botão seja esmagado no carrossel: */
+            flex-shrink: 0; 
+            white-space: nowrap;
+        }
+        .gen-btn:hover { border-color: var(--primary); color: var(--primary-light); transform: translateY(-2px); background: rgba(157, 78, 221, 0.1); }
+        .gen-btn.active { background: var(--primary); color: var(--white); border-color: var(--primary); box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4); }      
         .stats-bar { background: rgba(10, 10, 10, 0.8); padding: 1rem; text-align: center; border-bottom: 1px solid rgba(157, 78, 221, 0.1); font-size: 0.9rem; color: #888; }
         .stats-bar span { color: var(--primary-light); font-weight: 700; }
         
