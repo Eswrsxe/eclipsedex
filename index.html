@@ -209,8 +209,16 @@
         .minecraft-circle { background: #535C39; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4); }
         .minecraft-circle:hover { transform: translateY(-5px) scale(1.1); box-shadow: 0 8px 25px rgba(76, 175, 80, 0.6); background: #333; }
         
-        @media (max-width: 768px) { .title { font-size: 2rem; } .pokemon-grid { grid-template-columns: 1fr; } .header { padding: 1.5rem 1rem; } }
-        
+        @media (max-width: 768px) { 
+            .title { font-size: 2rem; } 
+            .pokemon-grid { grid-template-columns: 1fr; } 
+            .header { padding: 1.5rem 1rem; } 
+            
+            /* Empurra os botões pra esquerda no celular e dá um respiro no final */
+            .filter-buttons { justify-content: flex-start; }
+            .filter-buttons::after { content: ''; padding-right: 1rem; } 
+        }
+
         ::-webkit-scrollbar { width: 10px; } ::-webkit-scrollbar-track { background: var(--black); } ::-webkit-scrollbar-thumb { background: var(--primary-dark); border-radius: 5px; } ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
         
         .rarity-comum { background: #4CAF50; color: white; }
