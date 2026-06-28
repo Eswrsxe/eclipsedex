@@ -262,10 +262,25 @@
         function applyInitialSearchFromUrl() {
             const params = new URLSearchParams(window.location.search);
             const initialSearch = (params.get('search') || params.get('q') || '').trim();
+            const initialType = params.get('type'); // Lê o tipo vindo do Discord!
+
             if (initialSearch) {
                 const input = document.getElementById('searchInput');
                 if (input) input.value = initialSearch;
                 searchTerm = initialSearch.toLowerCase();
+            }
+
+            if (initialType) {
+                currentTypeFilter = initialType;
+                
+                // Dá um tempinho para os botões serem gerados e marca o botão certo como "Ativo"
+                setTimeout(() => {
+                    const btn = document.querySelector(`.type-btn[data-type="${initialType}"]`);
+                    if (btn) {
+                        document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                    }
+                }, 100);
             }
         }
 
